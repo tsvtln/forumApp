@@ -4,12 +4,11 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
 # from forumApp.forms import PersonForm
-from forumApp.posts.forms import PostBaseForm, PostCreateForm, PostDeleteForm, SearchForm
+from forumApp.posts.forms import PostBaseForm, PostCreateForm, PostDeleteForm, SearchForm, PostEditForm
 from forumApp.posts.models import Post
 
 
 def index(request):
-
     # form = PersonForm(request.POST or None)
 
     ## DEBUG
@@ -22,7 +21,7 @@ def index(request):
         "my_form": "",
     }
 
-    return render(request, 'base.html', context)
+    return render(request, 'common/index.html', context)
 
 
 def dashboard(request):
@@ -58,7 +57,24 @@ def add_post(request):
 
 
 def edit_post(request, pk: int):
-    return HttpResponse()  # TODO: fix it
+    post = Post.objects.get(pk=pk)
+
+    if request.method == 'POST':
+        form = PostEditForm(request.POST, instance=post)
+
+        if form.is_valid():
+            form.save()
+            return redirect('dash')
+
+    else:
+        form = PostEditForm(instance=post)
+
+    context = {
+        "form": form,
+        "post": post,
+    }
+
+    return render(request, 'posts/edit-post.html', context)
 
 
 def details_page(request, pk: int):
@@ -84,7 +100,4 @@ def delete_post(request, pk: int):
         "post": post,
     }
 
-    return render(request, 'posts/delete-template.html', context)
-
-
-
+    return render(request, 'posts/delete-post.html', context)
