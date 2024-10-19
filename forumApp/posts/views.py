@@ -3,13 +3,23 @@ from datetime import datetime
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
 
+from forumApp.forms import PersonForm
 from forumApp.posts.forms import PostBaseForm, PostCreateForm, PostDeleteForm, SearchForm
 from forumApp.posts.models import Post
 
 
 def index(request):
+
+    form = PersonForm(request.POST or None)
+
+    ## DEBUG
+    # if request.method == "POST":
+    #     print(request.POST['person_name'])
+    #   if form.is_valid():
+    #       print(form.cleaned_data['person_name'])
+
     context = {
-        "my_form": "",
+        "my_form": form,
     }
 
     return render(request, 'base.html', context)
