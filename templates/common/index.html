@@ -1,5 +1,9 @@
 {% extends 'common/base.html' %}
+{% load user_info %}
+{% load uppercase %}
 
 {% block content %}
-    <h1> Hello user!</h1>
+    {% uppercase %}
+    <h1> Hello {{ user }}!</h1>
+    {% enduppercase %}
 {% endblock %}
