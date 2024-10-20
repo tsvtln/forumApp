@@ -1,6 +1,8 @@
 from django import forms
+from django.core.exceptions import ValidationError
 
 from forumApp.posts.choices import LanguageChoice
+from forumApp.posts.mixins import DisableFieldsMixin
 from forumApp.posts.models import Post
 
 
@@ -9,21 +11,56 @@ class PostBaseForm(forms.ModelForm):
         model = Post
         field = '__all__'
 
+        error_messages = {
+            'title': {
+                'required': 'Please enter the title of your post.',
+                'max_length': f'Title is too long. Max length is {Post.TITLE_MAX_LENGTH} characters.'
+            },
+            'author': {
+                'required': 'Please enter an author name.'
+            }
+        }
+
+    def clean_author(self):
+        author = self.cleaned_data.get('author')
+
+        if not author[0].isupper():
+            raise ValidationError('Author name should start with capital letter!')
+
+        return author
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        title = cleaned_data.get('title')
+        content = cleaned_data.get('content')
+
+        if title and content and title in content:
+            raise ValidationError('The post title cannot be included in the post content!')
+
+        return cleaned_data
+
+    def save(self, commit=True):
+        post = super().save(commit=False)
+        post.title = post.title.capitalize()
+
+        if commit:
+            post.save()
+
+        return post
+
 
 class PostCreateForm(PostBaseForm):
     pass
 
 
-class PostEditForm(PostBaseForm):
+class PostEditForm(PostBaseForm, DisableFieldsMixin):
+    disabled_fields = ('title',)
     pass
 
 
-class PostDeleteForm(PostBaseForm):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
-        for field in self.fields:
-            self.fields[field].disabled = True
+class PostDeleteForm(PostBaseForm, DisableFieldsMixin):
+    pass
 
 
 class SearchForm(forms.Form):

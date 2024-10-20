@@ -126,3 +126,39 @@ legend {
     font-weight: bold;
     color: #007BFF;
 }
+
+.comment-item {
+    display: flex;
+    align-items: flex-start;
+}
+
+.comment-avatar {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.comment-content {
+    text-align: left;
+    margin-left: 10px;
+    flex: 1;
+}
+
+.comment-author {
+        text-align: left;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.comment-text {
+    margin: 0;
+}
+
+.form-inline {
+    width: auto;
+    height: auto;
+}
+
+.form-inline div {
+        margin-bottom: 0;
+}

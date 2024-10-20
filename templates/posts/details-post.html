@@ -1,5 +1,8 @@
+{#{% extends 'common/base.html' %}#}
 {% load static %}
 {% load markdown_extras %}
+{% load crispy_forms_filters %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -15,7 +18,10 @@
 <body>
     <div class="posts">  
         <div class="post">  
-            <div class="header">  
+            <div class="header">
+                {% if post.image %}
+                    <img src="{{ post.image.url }}" width="250" height="250" class="image-fluid">
+                {% endif %}
                 <h2>{{ post.title|capfirst }}</h2>  
                 <div class="icons">  
                     <a href="{% url 'edit-post' post.pk %}">  
@@ -34,7 +40,44 @@
             <div class="post-meta">  
                 <span>Posted by {{ post.author|default:"anonymous" }} on {{ post.created_at|date:"d-M-Y" }}</span>  
             </div>  
-        </div>  
+        </div>
+            <form method="post" class="form-inline">
+            {% csrf_token %}
+            {{ formset.management_form }}
+            <div class="input-group">
+                {% for form in formset %}
+                    <div class="form-row mb-3">
+                        <div class="col-md-12">
+                            {{ form.author|as_crispy_field }}
+                        </div>
+                        <div class="col-md-12">
+                            {{ form.content }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        
+            <!-- Wrapping the button inside a flex container and centering it -->
+            <div class="form-row d-flex justify-content-center">
+                <div class="col-auto">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                </div>
+            </div>
+            </form>
+            
+            <h2>Comments</h2>
+            <div class="comments-section">
+                {% for comment in comments %}
+                    <div class="media mb-3 comment-item">
+                        <img src="https://via.placeholder.com/50" class="mr-3 rounded-circle comment-avatar" alt="">
+                    </div>
+                    <div class="media-body" comment-content>
+                        <h5 class="mt-0 comment-author">{{ comment.author }}</h5>
+                        <p class="comment-text">{{ comment.content }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+    
     </div>
 </body>
     <script src='https://unpkg.com/akar-icons-fonts'></script>
