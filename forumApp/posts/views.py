@@ -1,27 +1,47 @@
 from datetime import datetime
 
+from django.forms import modelform_factory
 from django.http import HttpResponse
 from django.shortcuts import render, redirect
+from django.views import View
 
-# from forumApp.forms import PersonForm
 from forumApp.posts.forms import PostBaseForm, PostCreateForm, PostDeleteForm, SearchForm, PostEditForm, CommentFormSet
 from forumApp.posts.models import Post
 
 
-def index(request):
-    # form = PersonForm(request.POST or None)
+class Index(View):
+    def get(self, request, *args, **kwargs):
+        post_form = modelform_factory(
+            Post,
+            fields=('title', 'author', 'languages')
+        )
 
-    ## DEBUG
-    # if request.method == "POST":
-    #     print(request.POST['person_name'])
-    #   if form.is_valid():
-    #       print(form.cleaned_data['person_name'])
+        context = {
+            "my_form": post_form,
+        }
 
-    context = {
-        "my_form": "",
-    }
+        return render(request, 'common/index.html', context)
 
-    return render(request, 'common/index.html', context)
+
+# def index(request):
+#     # form = PersonForm(request.POST or None)
+#
+#     ## DEBUG
+#     # if request.method == "POST":
+#     #     print(request.POST['person_name'])
+#     #   if form.is_valid():
+#     #       print(form.cleaned_data['person_name'])
+#
+#     post_form = modelform_factory(
+#         Post,
+#         fields=('title', 'author', 'languages')
+#     )
+#
+#     context = {
+#         "my_form": post_form,
+#     }
+#
+#     return render(request, 'common/index.html', context)
 
 
 def dashboard(request):

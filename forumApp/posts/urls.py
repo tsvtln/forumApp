@@ -1,8 +1,8 @@
 from django.urls import path, include
-from forumApp.posts.views import dashboard, index, add_post, delete_post, details_page, edit_post
+from forumApp.posts.views import dashboard, add_post, delete_post, details_page, edit_post, Index
 
 urlpatterns = [
-    path('', index, name='index'),
+    path('', Index.as_view(), name='index'),
     path('dashboard/', dashboard, name='dash'),
     path('add-post/', add_post, name='add-post'),
     path('<int:pk>/', include([
