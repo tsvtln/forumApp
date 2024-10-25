@@ -6,5 +6,8 @@
     {% uppercase %}
     <h1> Welcome!</h1>
     {% enduppercase %}
-    {{ dynamic_time }}
+    <h1> You are logged in as {{ user }}</h1>
+    
+    {{ static_time|time:'s' }}
+    {{ dynamic_time|time:'s' }}
 {% endblock %}
