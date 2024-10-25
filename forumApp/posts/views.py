@@ -5,12 +5,14 @@ from django.forms import modelform_factory
 from django.http import HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.utils.decorators import classonlymethod
+from django.utils.decorators import classonlymethod, method_decorator
 from django.views import View
 from django.views.generic import TemplateView, RedirectView, ListView, FormView, CreateView, UpdateView, DeleteView, \
     DetailView
 
+from forumApp.decorators import measure_execution_time
 from forumApp.posts.forms import PostBaseForm, PostCreateForm, PostDeleteForm, SearchForm, PostEditForm, CommentFormSet
+from forumApp.posts.mixins import TimeRestrictedMixin
 from forumApp.posts.models import Post
 
 
@@ -32,7 +34,8 @@ class BaseView:
             return self.post(request, *args, **kwargs)
 
 
-class IndexView(TemplateView):
+@method_decorator(measure_execution_time, name="dispatch")
+class IndexView(TimeRestrictedMixin, TemplateView):
     template_name = 'common/index.html'  # static
 
     extra_context = {
@@ -52,22 +55,22 @@ class IndexView(TemplateView):
             return ['common/index.html']
 
 
-class Index(BaseView):
-    def get(self, request, *args, **kwargs):
-        # post_form = modelform_factory(
-        #     Post,
-        #     fields=('title', 'author', 'languages')
-        # )
-        #
-        # context = {
-        #     "my_form": post_form,
-        # }
-
-        context = {
-            'dynamic_time': datetime.now(),
-        }
-
-        return render(request, 'common/index.html', context)
+# class Index(BaseView):
+#     def get(self, request, *args, **kwargs):
+#         # post_form = modelform_factory(
+#         #     Post,
+#         #     fields=('title', 'author', 'languages')
+#         # )
+#         #
+#         # context = {
+#         #     "my_form": post_form,
+#         # }
+#
+#         context = {
+#             'dynamic_time': datetime.now(),
+#         }
+#
+#         return render(request, 'common/index.html', context)
 
 
 # def index(request):
