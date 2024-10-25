@@ -15,7 +15,7 @@
 </head>
 {% block content %}
     {% include 'common/nav.html' %}
-    
+
     <div class="container">
         {% include 'posts/search-form.html' %}
         <div class="posts">
@@ -23,13 +23,13 @@
                 <a id="post-url" href="{% url 'details-post' post.pk %}">
                     <div class="post">
                         <h2>{{ post.title|capfirst }}</h2>
-                    
+
                         {% if not post.content %}
                             {% lorem 3 p %}
                         {% else %}
                             {{ post.content|markdown }}
                         {% endif %}
-                    
+
                         <div class="post-meta">
                             <span>Posted by {{ post.author|default:"anonymous" }} on {{ post.created_at|date:"d-M-Y" }}</span>
                         </div>
@@ -40,7 +40,7 @@
             {% endfor %}
         </div>
     </div>
-    
+
     <script src='https://unpkg.com/akar-icons-fonts'></script>
 </html>
 {% endblock %}

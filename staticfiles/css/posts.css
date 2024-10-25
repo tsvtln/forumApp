@@ -4,6 +4,20 @@
     margin-right: auto;
 }
 
+.centered-image {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/*h2 {*/
+/*    text-align: center;*/
+/*}*/
+
+.centered-title {
+    text-align: center;
+}
+
 body {
     font-family: "Roboto", sans-serif;
     font-weight: 300;
