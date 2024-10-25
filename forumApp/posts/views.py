@@ -7,7 +7,8 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.decorators import classonlymethod
 from django.views import View
-from django.views.generic import TemplateView, RedirectView, ListView, FormView, CreateView, UpdateView, DeleteView
+from django.views.generic import TemplateView, RedirectView, ListView, FormView, CreateView, UpdateView, DeleteView, \
+    DetailView
 
 from forumApp.posts.forms import PostBaseForm, PostCreateForm, PostDeleteForm, SearchForm, PostEditForm, CommentFormSet
 from forumApp.posts.models import Post
@@ -110,6 +111,7 @@ class DashboardView(ListView, FormView):
     template_name = 'posts/dashboard.html'
     context_object_name = 'posts'
     form_class = SearchForm
+    paginate_by = 5
     success_url = reverse_lazy('dash')
     model = Post
 
@@ -177,26 +179,54 @@ class EditPostView(UpdateView):
 #
 #     return render(request, 'posts/edit-post.html', context)
 
+class PostDetailView(DetailView):
+    model = Post
+    template_name = 'posts/details-post.html'
 
-def details_page(request, pk: int):
-    post = Post.objects.get(pk=pk)
-    formset = CommentFormSet(request.POST or None)
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['formset'] = CommentFormSet()
+        return context
 
-    if request.method == 'POST':
-        if formset.is_valid():
-            for form in formset:
-                if form.cleaned_data:
-                    comment = form.save(commit=False)
-                    comment.post = post
-                    comment.save()
-            return redirect('details-post', pk=post.id)
+    def post(self, request, *args, **kwargs):
+        post = self.get_object()
+        formset = CommentFormSet(request.POST or None)
 
-    context = {
-        "post": post,
-        "formset": formset,
-    }
+        if request.method == 'POST':
+            if formset.is_valid():
+                for form in formset:
+                    if form.cleaned_data:
+                        comment = form.save(commit=False)
+                        comment.post = post
+                        comment.save()
+                return redirect('details-post', pk=post.id)
 
-    return render(request, 'posts/details-post.html', context)
+        context = self.get_context_data()
+        context['formset'] = formset
+
+        return self.render_to_response(context)
+
+
+#
+# def details_page(request, pk: int):
+#     post = Post.objects.get(pk=pk)
+#     formset = CommentFormSet(request.POST or None)
+#
+#     if request.method == 'POST':
+#         if formset.is_valid():
+#             for form in formset:
+#                 if form.cleaned_data:
+#                     comment = form.save(commit=False)
+#                     comment.post = post
+#                     comment.save()
+#             return redirect('details-post', pk=post.id)
+#
+#     context = {
+#         "post": post,
+#         "formset": formset,
+#     }
+#
+#     return render(request, 'posts/details-post.html', context)
 
 
 class DeletePostView(DeleteView):
