@@ -38,6 +38,11 @@ class Post(models.Model):
         null=True,
     )
 
+    class Meta:
+        permissions = [
+            ('can_approve_post', 'Can approve post'),
+        ]
+
 
 class Comment(models.Model):
     post = models.ForeignKey(
@@ -55,4 +60,5 @@ class Comment(models.Model):
     created_at = models.DateTimeField(
         auto_now_add=True,
     )
+
 
