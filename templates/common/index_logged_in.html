@@ -4,10 +4,17 @@
 
 {% block content %}
     {% uppercase %}
-    <h1> Welcome!</h1>
+    <h1 class="WELCOME-MESSAGE">Welcome!</h1>
     {% enduppercase %}
-    <h1>You are logged in as {{ user.display_name }}</h1>
+    <h1 class="LOGED-IN-MESSAGE">You are logged in as {{ user.display_name }}</h1>
 
 {#    {{ static_time|time:'s' }}#}
 {#    {{ dynamic_time|time:'s' }}#}
+{% endblock %}
+
+
+{% block content2 %}
+    <div class="center-container">
+        <img src="/media/src/Foro-Nacional-Caprino-768x549.jpg" alt="Cool goat" class="index-image">
+    </div>
 {% endblock %}

@@ -15,7 +15,21 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'elena-septivalent-sunnily.ngrok-free.dev',
+    'tsvtln.com',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://elena-septivalent-sunnily.ngrok-free.dev",
+    "http://127.0.0.1",
+    "http://tsvtln.com",
+    "https://tsvtln.com",
+    "http://www.tsvtln.com",
+    "https://www.tsvtln.com",
+]
 
 
 # Application definition
@@ -41,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'middlewares.measure_time_execution',
+    'middlewares.MeasureTimeExecution',
 ]
 
 ROOT_URLCONF = 'forumApp.urls'
@@ -57,6 +73,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -119,11 +136,11 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = (
-    BASE_DIR / 'staticfiles',
-)
+STATICFILES_DIRS = [
+    BASE_DIR / "staticfiles",
+]
 
-MEDIA_URL = 'media/'
+MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR / 'media'
 

@@ -8,20 +8,29 @@ ul.menu {
   font-family: "Roboto", sans-serif;
   font-weight: 300;
   font-style: normal;
-  left: 30px;
-  top: 20%;
-  list-style: none;
-  margin: 0;
+  left: 0;
+  top: 0;
+  height: 100vh;
   width: 70px;
-  padding: 0;
+  padding: 0.75rem 0 0.75rem 0;
+  margin: 0;
   margin-right: auto;
   background-color: #05043e;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: 0.75rem;
-  border-radius: 10px;
+  justify-content: flex-start;
+  border-radius: 0 10px 10px 0;
   box-shadow: 0 10px 50px 0 rgba(5, 4, 62, 0.25);
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+ul.menu li.menu-item {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 ul.menu li.menu-item:nth-child(6) {
@@ -34,16 +43,19 @@ ul.menu li.menu-item + li.menu-item {
   margin-top: 0.75rem;
 }
 
-ul.menu a.menu-link {
-  color: #FFF;
-  text-decoration: none;
+ul.menu a.menu-link, ul.menu button.menu-link {
+  width: 2.5vw;
+  min-width: 32px;
+  max-width: 70px;
+  height: 2.5vw;
+  min-height: 32px;
+  max-height: 70px;
+  font-size: 1.2vw;
+  border-radius: 8px;
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 8px;
-  position: relative;
 }
 
 ul.menu a.menu-link:hover, ul.menu a.menu-link:focus, ul.menu a.menu-link.active {
@@ -56,8 +68,10 @@ ul.menu a.menu-link:hover span, ul.menu a.menu-link:focus span, ul.menu a.menu-l
   opacity: 1;
 }
 
-ul.menu a.menu-link i {
-  font-size: 1.375rem;
+ul.menu a.menu-link i, ul.menu button.menu-link i {
+  font-size: 1.2vw;
+  min-font-size: 16px;
+  max-font-size: 28px;
 }
 
 ul.menu a.menu-link span {
@@ -85,6 +99,69 @@ ul.menu a.menu-link span:before {
   top: 50%;
   transform: translatey(-50%) rotate(45deg);
   border-radius: 3px;
+}
+
+ul.menu form {
+  margin: 0;
+  padding: 0;
+}
+
+ul.menu button.menu-link {
+  color: #FFF;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 8px;
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+}
+
+ul.menu button.menu-link:hover,
+ul.menu button.menu-link:focus {
+  background-color: #30305a;
+  outline: 0;
+}
+
+ul.menu button.menu-link:hover span,
+ul.menu button.menu-link:focus span {
+  transform: scale(1);
+  opacity: 1;
+}
+
+@media (max-width: 900px) {
+  ul.menu {
+    width: 48px;
+  }
+  ul.menu a.menu-link, ul.menu button.menu-link {
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+  }
+  ul.menu a.menu-link i, ul.menu button.menu-link i {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 640px), (max-height: 480px) {
+  ul.menu {
+    width: 36px;
+    padding: 0.2rem 0 0.2rem 0;
+  }
+  ul.menu a.menu-link, ul.menu button.menu-link {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+  ul.menu a.menu-link i, ul.menu button.menu-link i {
+    font-size: 12px;
+  }
 }
 
 details {
@@ -198,71 +275,4 @@ summary i {
   100% {
     transform: scale(1);
   }
-}
-
-/* Logout button styling to match menu links */
-ul.menu form {
-  margin: 0;
-  padding: 0;
-}
-
-ul.menu button.menu-link {
-  color: #FFF;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 3rem;
-  height: 3rem;
-  border-radius: 8px;
-  position: relative;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0;
-  font-family: inherit;
-}
-
-ul.menu button.menu-link:hover,
-ul.menu button.menu-link:focus {
-  background-color: #30305a;
-  outline: 0;
-}
-
-ul.menu button.menu-link:hover span,
-ul.menu button.menu-link:focus span {
-  transform: scale(1);
-  opacity: 1;
-}
-
-ul.menu button.menu-link i {
-  font-size: 1.375rem;
-}
-
-ul.menu button.menu-link span {
-  position: absolute;
-  background-color: #30305a;
-  font-family: "Roboto", sans-serif;
-  white-space: nowrap;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  left: calc(100% + 1.5rem);
-  transform-origin: center left;
-  transform: scale(0);
-  opacity: 0;
-  transition: 0.15s ease;
-  pointer-events: none;
-}
-
-ul.menu button.menu-link span:before {
-  content: "";
-  display: block;
-  width: 12px;
-  height: 12px;
-  position: absolute;
-  background-color: #30305a;
-  left: -5px;
-  top: 50%;
-  transform: translatey(-50%) rotate(45deg);
-  border-radius: 3px;
 }

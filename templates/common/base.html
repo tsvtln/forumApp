@@ -18,24 +18,22 @@
 </head>
 <body>
     {% include 'common/nav.html' %}
-    
-    <div class="container-fluid">
+    <div class="container-fluid position-relative">
+        <div class="user-info-fixed" style="position:fixed; top:20px; right:30px; z-index:1100;">
+            {% user_info request.user %}
+        </div>
         <div class="row">
-            <div class="col-md-2 p-3">
-                    <p>Last refresh: {% current_time %}</p>
+            <div class="col-md-2 p-7" style="margin-left:80px;">
+                <p>Last refresh: {% current_time %}</p>
             </div>
             
             <div class="col-md-8 py-4">
                 <div class="text-center">
                     {% block content %}
-                    
                     {% endblock %}
                 </div>
-            </div>
-
-            <div class="col-md-2 p-3 d-flex justify-content-end">
-                <div>
-                {% user_info request.user %}
+                <div class="text-center mt-4">
+                    {% block content2 %}{% endblock %}
                 </div>
             </div>
         </div>

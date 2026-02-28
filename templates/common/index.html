@@ -1,10 +1,17 @@
 {% extends 'common/base.html' %}
+{% load static %}
 {% load user_info %}
 {% load uppercase %}
 
 {% block content %}
     {% uppercase %}
-    <h1> Welcome!</h1>
+    <h1 class="WELCOME-MESSAGE">Welcome!</h1>
     {% enduppercase %}
     {{ dynamic_time }}
+{% endblock %}
+
+{% block content2 %}
+    <div class="center-container">
+        <img src="/media/src/Foro-Nacional-Caprino-768x549.jpg" alt="Cool goat" class="index-image">
+    </div>
 {% endblock %}
