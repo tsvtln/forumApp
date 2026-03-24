@@ -4,12 +4,18 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from .models import AppUser
 
 
-class SignUpForm(UserCreationForm):
+class AppUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True)
 
     class Meta:
         model = AppUser
         fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = (
+            "Required: 150 characters or fewer, digits and @/./+/-/_ only"
+        )
 
 
 class CustomUserForm(UserCreationForm):

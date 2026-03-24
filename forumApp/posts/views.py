@@ -1,9 +1,14 @@
+import asyncio
 from datetime import datetime
 
 import pytz
+from asgiref.sync import sync_to_async
+from django.contrib.auth import get_user_model
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.mail import send_mail
 from django.forms import modelform_factory
 from django.http import HttpResponse, HttpResponseNotAllowed
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import classonlymethod, method_decorator
 from django.views import View
@@ -14,6 +19,9 @@ from forumApp.decorators import measure_execution_time
 from forumApp.posts.forms import PostBaseForm, PostCreateForm, PostDeleteForm, SearchForm, PostEditForm, CommentFormSet
 from forumApp.posts.mixins import TimeRestrictedMixin
 from forumApp.posts.models import Post
+
+
+UserModel = get_user_model()
 
 
 class BaseView:
@@ -114,24 +122,90 @@ class DashboardView(ListView, FormView):
     template_name = 'posts/dashboard.html'
     context_object_name = 'posts'
     form_class = SearchForm
-    paginate_by = 5
+    paginate_by = 6
     success_url = reverse_lazy('dash')
+
     model = Post
 
     def get_queryset(self):
         queryset = self.model.objects.all()
+        print('DEBUG: All posts:', list(queryset))
+
+        if 'posts.can_approve_posts' not in self.request.user.get_group_permissions() or not self.request.user.has_perm('posts.can_approve_posts'):
+            queryset = queryset.filter(approved=True)
+            print('DEBUG: Filtered approved posts:', list(queryset))
+
         if 'query' in self.request.GET:
             query = self.request.GET.get('query')
-            queryset = self.queryset.filter(title__icontains=query)
+            queryset = queryset.filter(title__icontains=query)
+            print('DEBUG: Filtered by query:', list(queryset))
 
         return queryset
 
 
-class AddPostView(CreateView):
+async def fetch_post_and_users(post_id):
+    post = await Post.objects.select_related('author').aget(pk=post_id)
+    all_users = await sync_to_async(UserModel.objects.exclude)(id=post.author.id)
+    all_users_to_list = await sync_to_async(list)(all_users)
+    return post, all_users_to_list
+
+
+async def send_slow_email(subject, message, origin, to):
+    await asyncio.sleep(2)
+    await sync_to_async(send_mail(
+        subject,
+        message,
+        origin,
+        [to]
+    ))
+
+
+async def notify_all_users(request, post_id):
+    post, all_users = await fetch_post_and_users(post_id)
+    subject = f"New post {post.title}"
+    message = f"{post.author.username} wrote:\n\n{post.content}"
+    email_tasks = [
+        send_slow_email(
+            subject,
+            message,
+            'no-reply@forumapp.com',
+            user.email
+        )
+        for user in all_users
+    ]
+
+    await asyncio.gather(*email_tasks)
+
+    return HttpResponse("DONE")
+
+
+def approve_post(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post.approved = True
+    post.save()
+    referer = request.META.get('HTTP_REFERER')
+    if referer:
+        return redirect(referer)
+    # fallback to dashboard by URL name
+    from django.urls import reverse
+    return redirect(reverse('dash'))
+
+
+# def add_post_view(request, pk):
+#     post = Post.objects.get(pk=pk)
+#     post.approved = True
+#     post.save()
+
+
+class AddPostView(LoginRequiredMixin, CreateView):
     model = Post
     form_class = PostCreateForm
     template_name = 'posts/add-post.html'
     success_url = reverse_lazy('dash')
+
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 # def add_post(request):
@@ -230,7 +304,6 @@ class PostDetailView(DetailView):
 #     }
 #
 #     return render(request, 'posts/details-post.html', context)
-
 
 class DeletePostView(DeleteView):
     model = Post

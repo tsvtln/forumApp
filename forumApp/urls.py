@@ -9,6 +9,7 @@ urlpatterns = [
     path('accounts/', include('forumApp.accounts.urls')),
     path('', include('forumApp.posts.urls')),
     path('common/', include('forumApp.common.urls')),
+    path('accounts/', include('forumApp.accounts.urls')),
 ]
 
 if settings.DEBUG:

@@ -1,9 +1,17 @@
 from django import forms
+from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
 from forumApp.posts.choices import LanguageChoice
 from forumApp.posts.mixins import DisableFieldsMixin
 from forumApp.posts.models import Post
+from django.contrib.auth.forms import UserCreationForm
+
+
+class CustomUserForm(UserCreationForm):
+    class Meta:
+        mode = get_user_model()
+        fields = ('username', 'email')
 
 
 class PostBaseForm(forms.ModelForm):

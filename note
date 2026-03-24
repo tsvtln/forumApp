@@ -1,0 +1,4 @@
+celery, redis+redisInsight, mailhog
+
+starting celery
+$ celery -A forumApp worker -l info

@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+from django.conf.global_settings import AUTHENTICATION_BACKENDS
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -94,11 +95,18 @@ DATABASES = {
     }
 }
 
-
-
+# Mail settings (currently local with mailhog)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'localhost'
+EMAIL_PORT = 1025
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
+
+AUTHENTICATION_BACKENDS = [
+    'forumApp.accounts.authentication.EmailOrUsernameBackend',
+    'django.contrib.auth.backends.ModelBackend',  # fallback of above, but not really needed
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -140,8 +148,11 @@ STATICFILES_DIRS = [
     BASE_DIR / "staticfiles",
 ]
 
-MEDIA_URL = '/media/'
+CELERY_BROKER_URL = config("CELERY_BROKER_URL")
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 
+MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 # Default primary key field type
@@ -149,6 +160,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# AUTH_USER_MODEL = 'accounts.AppUser'
 AUTH_USER_MODEL = 'accounts.AppUser'
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('index')

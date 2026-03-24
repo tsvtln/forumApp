@@ -17,18 +17,21 @@
             <span>Create Post</span>
         </a>
     </li>
+    {% if not request.user.is_authenticated %}
     <li class="menu-item">
-        <a href="#" class="menu-link">
-            <i class="ai-book-open"></i>
-            <span>Books</span>
+        <a href="{% url 'login' %}" class="menu-link">
+            <i class="ai-arrow-right-thick"></i>
+            <span>Login</span>
         </a>
     </li>
+    {% else %}
     <li class="menu-item">
-        <a href="#" class="menu-link">
-            <i class="ai-bell"></i>
-            <span>Notifications</span>
+        <a href="{% url 'logout' %}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="menu-link">
+            <i class="ai-arrow-left-thick"></i>
+            <span>Logout</span>
         </a>
     </li>
+    {% endif %}
     <li class="menu-item">
         <a href="#" class="menu-link">
             <i class="ai-gear"></i>
@@ -47,19 +50,23 @@
             <span>Profile</span>
         </a>
     </li>
-    {% if user.is_authenticated %}
-    <li class="menu-item">
-        <a href="{% url 'logout' %}" class="menu-link">
-            <i class="ai-sign-out"></i>
-            <span>Logout</span>
-        </a>
-    </li>
-    {% else %}
-    <li class="menu-item">
-        <a href="{% url 'login' %}" class="menu-link">
-            <i class="ai-door"></i>
-            <span>Login</span>
-        </a>
-    </li>
-    {% endif %}
+{#    {% if user.is_authenticated %}#}
+{#    <li class="menu-item">#}
+{#        <a href="{% url 'logout' %}" class="menu-link">#}
+{#            <i class="ai-sign-out"></i>#}
+{#            <span>Logout</span>#}
+{#        </a>#}
+{#    </li>#}
+{#    {% else %}#}
+{#    <li class="menu-item">#}
+{#        <a href="{% url 'login' %}" class="menu-link">#}
+{#            <i class="ai-door"></i>#}
+{#            <span>Login</span>#}
+{#        </a>#}
+{#    </li>#}
+{#    {% endif %}#}
 </ul>
+
+<form id="logout-form" method="post" action="{% url 'logout' %}" style="display: none;">
+    {% csrf_token %}
+</form>
