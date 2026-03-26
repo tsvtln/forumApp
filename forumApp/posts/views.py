@@ -131,14 +131,12 @@ class DashboardView(ListView, FormView):
         queryset = self.model.objects.all()
         print('DEBUG: All posts:', list(queryset))
 
-        if 'posts.can_approve_posts' not in self.request.user.get_group_permissions() or not self.request.user.has_perm('posts.can_approve_posts'):
+        if not self.request.user.has_perm('posts.can_approve_posts'):
             queryset = queryset.filter(approved=True)
-            print('DEBUG: Filtered approved posts:', list(queryset))
 
         if 'query' in self.request.GET:
             query = self.request.GET.get('query')
             queryset = queryset.filter(title__icontains=query)
-            print('DEBUG: Filtered by query:', list(queryset))
 
         return queryset
 
@@ -180,15 +178,19 @@ async def notify_all_users(request, post_id):
 
 
 def approve_post(request, pk):
-    post = get_object_or_404(Post, pk=pk)
+    post = Post.objects.get(pk=pk)
     post.approved = True
     post.save()
-    referer = request.META.get('HTTP_REFERER')
-    if referer:
-        return redirect(referer)
-    # fallback to dashboard by URL name
-    from django.urls import reverse
-    return redirect(reverse('dash'))
+    return redirect(request.META.get('HTTP_REFERER'))
+    # post = get_object_or_404(Post, pk=pk)
+    # post.approved = True
+    # post.save()
+    # referer = request.META.get('HTTP_REFERER')
+    # if referer:
+    #     return redirect(referer)
+    # # fallback to dashboard by URL name
+    # from django.urls import reverse
+    # return redirect(reverse('dash'))
 
 
 # def add_post_view(request, pk):

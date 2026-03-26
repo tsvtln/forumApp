@@ -1,6 +1,7 @@
 from pathlib import Path
 from decouple import config
-from django.conf.global_settings import AUTHENTICATION_BACKENDS
+from django.conf.global_settings import AUTHENTICATION_BACKENDS, CSRF_COOKIE_HTTPONLY, SESSION_COOKIE_SECURE
+from django.middleware.csrf import CSRF_TOKEN_LENGTH
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -138,6 +139,9 @@ USE_TZ = True
 CRISPY_ALLOWED_TEMPLATE_PACKS = 'bootstrap4'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
+# Secure the cookies
+# SESSION_COOKIE_HTTPONLY = True
+# SESSION_COOKIE_SECURE = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
