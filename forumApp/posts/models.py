@@ -6,6 +6,7 @@ from forumApp.posts.validators import BadLanguageValidator
 
 UserModel = get_user_model()
 
+
 class Post(models.Model):
 
     TITLE_MAX_LENGTH = 100
