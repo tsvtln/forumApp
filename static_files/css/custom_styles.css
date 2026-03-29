@@ -1,0 +1,41 @@
+.center-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    padding-top: 20px;
+}
+
+.index-image {
+    width: fit-content;
+    height: fit-content;
+    max-width: none;
+    max-height: none;
+    object-fit: contain;
+    box-shadow: 0 4px 16px rgba(0,2,2,2);
+    border-radius: 22px;
+}
+
+.WELCOME-MESSAGE {
+    text-align: center;
+    font-family: Times, Times New Roman, serif;
+    font-weight: 200;
+    font-size: 40px;
+    padding-bottom: 0px;
+    line-height: 1.5;
+    color: #0dcaf0;
+    text-shadow:
+        0 0 8px #0c4128,
+        0 0 16px #0c4128,
+        0 0 24px #0c4128,
+        0 0 32px #0c4128;
+}
+
+.LOGED-IN-MESSAGE {
+    font-family: Times, Times New Roman, serif;
+    font-weight: 100;
+    for-size: 10px;
+    color: #0f5132;
+    text-shadow: 0 0 2px #1a1e21;
+    text-shadow: 12px 2px 8px #2c3034;
+}

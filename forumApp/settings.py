@@ -22,6 +22,7 @@ ALLOWED_HOSTS = [
     '127.0.0.1',
     'elena-septivalent-sunnily.ngrok-free.dev',
     'tsvtln.com',
+    'forumapp.bg',
 ]
 
 CSRF_TRUSTED_ORIGINS = [
@@ -31,6 +32,8 @@ CSRF_TRUSTED_ORIGINS = [
     "https://tsvtln.com",
     "http://www.tsvtln.com",
     "https://www.tsvtln.com",
+    "http://forumapp.bg",
+    "https://forumapp.bg"
 ]
 
 
@@ -148,9 +151,12 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 
 STATIC_URL = 'static/'
 
+STATIC_ROOT = BASE_DIR / 'static_files'
+
 STATICFILES_DIRS = [
     BASE_DIR / "staticfiles",
 ]
+# python manage.py collectstatic
 
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
 CELERY_ACCEPT_CONTENT = ['json']
